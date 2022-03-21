@@ -1,0 +1,42 @@
+header {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+.header__container {
+  width: 960px;
+  max-width: 100%;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+header .header__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.header__nav li {
+  display: inline;
+}
+.header__nav a {
+  display: inline-block;
+  padding: 0.5em 1.5em;
+  margin-right: 0.5em;
+  text-decoration: none;
+  background-color: grey;
+  border-radius: 5px;
+  color: var(--text-primary);
+  background-color: var(--background-secondary);
+}
+
+@media (max-width: 820px) {
+  .header__nav a {
+    margin-top: 0.5em;
+  }
+}
+
+.header__nav a:hover {
+  background-color: var(--secondary-hover);
+}
