@@ -1,3 +1,5 @@
+import Header from "../Header/Header.js";
+
 export default function Home(props) {
   return (
     <div>

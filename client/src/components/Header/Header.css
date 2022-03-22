@@ -1,5 +1,5 @@
 header {
-  background-color: var(--background-primary);
+  background-color: var(--background-header);
   color: var(--text-primary);
 }
 
@@ -25,10 +25,8 @@ header .header__container {
   padding: 0.5em 1.5em;
   margin-right: 0.5em;
   text-decoration: none;
-  background-color: grey;
-  border-radius: 5px;
+  border-radius: 50px;
   color: var(--text-primary);
-  background-color: var(--background-secondary);
 }
 
 @media (max-width: 820px) {
@@ -38,5 +36,6 @@ header .header__container {
 }
 
 .header__nav a:hover {
-  background-color: var(--secondary-hover);
+  color: var(--text-hover);
+  background-color: rgb(0,0,0,0.09);
 }
