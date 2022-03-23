@@ -59,7 +59,7 @@ router.post("/login", (request, response) => {
 // @desc Register user
 router.post("/register", async (request, response) => {
   // Find requested user in DB
-  User.findOne({ username: request.body.email }, function (err, doc) {
+  User.findOne({ email: request.body.email }, function (err, doc) {
     // If user DOES NOT exist
     if (doc === null) {
       bcrypt.hash(request.body.password, 10).then((hash) => {
@@ -70,7 +70,7 @@ router.post("/register", async (request, response) => {
         });
 
         // Save user to DB
-        user.save().then((response) => {
+        user.save().then((result) => {
           response.status(200).json({
             success: true,
           });
