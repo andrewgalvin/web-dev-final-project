@@ -11,10 +11,10 @@ import Register from "./components/Register/Register.js";
 
 import "./app.css";
 
-function RequireAuth({ children }) {
+function RequireAuth({ children, loggedIn }) {
   const location = useLocation();
 
-  return true ? (
+  return loggedIn ? (
     children
   ) : (
     <Navigate to="/login" replace state={{ path: location.pathname }} />
@@ -23,23 +23,45 @@ function RequireAuth({ children }) {
 
 export default function App() {
   const [isLoading, setLoaded] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    setLoaded(!isLoading);
+    fetch("/api/user/session", {
+      method: "POST", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-cache",
+      },
+      credentials: "same-origin",
+    })
+      .then((r) =>
+        r.json().then((data) => ({ status: r.status, body: data }))
+      )
+      .then(function (obj) {
+        if (obj.status === 200) {
+          setLoggedIn(true);
+          setLoaded(!isLoading);
+        } else {
+          setLoaded(!isLoading);
+        }
+      });
   }, []); // eslint-disable-line
 
   return (
     <React.Fragment>
-      <Header />
+      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
+        />
         <Route path="/register" element={<Register />} />
         <Route
           path="/dashboard"
           element={
-            <RequireAuth>
-              <Dashboard />
+            <RequireAuth loggedIn={loggedIn}>
+              <Dashboard loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
             </RequireAuth>
           }
         />

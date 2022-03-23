@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config()
 const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
@@ -58,11 +58,11 @@ app.use(
   
 
 // Routes Configuration
-app.use("/api/users", users);
+app.use("/api/user", users);
 
 // Connect to MongoDB and then start listening
 mongoose
-  .connect(process.env.DBURI, {
+  .connect(process.env.DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

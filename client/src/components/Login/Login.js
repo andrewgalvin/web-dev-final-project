@@ -1,9 +1,38 @@
 import "./Login.css";
+import {useNavigate} from "react-router-dom";
 
 export default function Login(props) {
+  const navigate = useNavigate();
+
+  const handleLoginClick = (e) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+
+    let USERNAME = data.get("email");
+    let PASSWORD = data.get("password");
+
+    fetch("/api/user/login", {
+      method: "POST", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: USERNAME,
+        password: PASSWORD,
+      }),
+    })
+      .then((r) => r.json().then((data) => ({ status: r.status, body: data })))
+      .then(function (obj) {
+        if (obj.status === 200) {
+          props.setLoggedIn(true);
+          navigate("/dashboard");
+        }
+      });
+  };
+  
   return (
     <div className="login">
-      <form>
+      <form onSubmit={handleLoginClick}>
         <div className="login-container">
           <h1>
             <span>Login</span>
