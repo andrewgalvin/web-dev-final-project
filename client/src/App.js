@@ -34,9 +34,7 @@ export default function App() {
       },
       credentials: "same-origin",
     })
-      .then((r) =>
-        r.json().then((data) => ({ status: r.status, body: data }))
-      )
+      .then((r) => r.json().then((data) => ({ status: r.status, body: data })))
       .then(function (obj) {
         if (obj.status === 200) {
           setLoggedIn(true);
@@ -49,23 +47,29 @@ export default function App() {
 
   return (
     <React.Fragment>
-      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route
-          path="/login"
-          element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
-        />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/dashboard"
-          element={
-            <RequireAuth loggedIn={loggedIn}>
-              <Dashboard loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-            </RequireAuth>
-          }
-        />
-      </Routes>
+      {isLoading ? (
+        <></>
+      ) : (
+        <>
+          <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/login"
+              element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
+            />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/dashboard"
+              element={
+                <RequireAuth loggedIn={loggedIn}>
+                  <Dashboard loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+                </RequireAuth>
+              }
+            />
+          </Routes>
+        </>
+      )}
     </React.Fragment>
   );
 }

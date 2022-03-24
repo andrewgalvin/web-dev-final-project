@@ -1,0 +1,35 @@
+.weather {
+  height: 100%;
+}
+
+.weather-city {
+  width: 100%;
+  background-color: #525966;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 10px;
+}
+
+.weather-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.weather-content p {
+  padding: 10px 10px;
+}
+
+.weather-refresh {
+  background-color: green;
+  color: white;
+  border-radius: 5px;
+  border-color: transparent;
+  padding: 2px 2px;
+  text-align: center;
+  text-decoration: none;
+}

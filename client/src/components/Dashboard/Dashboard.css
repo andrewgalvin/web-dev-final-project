@@ -1,0 +1,31 @@
+.dashboard {
+    background-color: var(--background-primary);
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    overflow-y: scroll;
+    padding-top: 20px;
+}
+
+.dashboard::-webkit-scrollbar {
+    display: none;
+  }
+
+.dashboard-weather {
+    width: 70vw;
+    height: 100%;
+    border-radius: 5px;
+    box-shadow: -1em 1em 1em rgb(0, 0, 0, 0.4);
+    background-color: #636794;
+}
+
+.dashboard-todo-list {
+    width: 70vw;
+    height: 40vw;
+    border-radius: 5px;
+    margin: 40px auto;
+    box-shadow: -1em 1em 1em rgb(0, 0, 0, 0.4);
+    background-color: var(--background-secondary);
+}
