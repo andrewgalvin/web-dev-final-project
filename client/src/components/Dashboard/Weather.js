@@ -51,6 +51,10 @@ export default function Weather(props) {
       });
   };
 
+  const convertToFahrenheit = (celsius) => {
+    return (celsius * 9) / 5 + 32;;
+  };
+
   return (
     <>
       {loading === true ? (
@@ -69,11 +73,14 @@ export default function Weather(props) {
               </div>
               <div className="weather-content">
                 <p>{new Date(Date.now()).toDateString()}</p>
-                <p>{data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1)}</p>
+                <p>
+                  {data.weather[0].description.charAt(0).toUpperCase() +
+                    data.weather[0].description.slice(1)}
+                </p>
               </div>
               <div className="weather-content">
-                <p>Temprature: {data.main.temp}</p>
-                <p>Humidity: {data.main.humidity}</p>
+                <p>Temprature: {convertToFahrenheit(data.main.temp).toFixed(2)} &#8457;</p>
+                <p>Humidity: {data.main.humidity}%</p>
               </div>
               <div className="weather-content">
                 <p>
@@ -89,7 +96,7 @@ export default function Weather(props) {
               </div>
             </div>
           ) : (
-            <div style={{padding: "20px 20px"}}>
+            <div style={{ padding: "20px 20px" }}>
               <h4>Fetching local weather data...</h4>
             </div>
           )}
