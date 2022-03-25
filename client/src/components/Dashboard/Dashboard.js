@@ -1,5 +1,6 @@
 import "./Dashboard.css";
 import Weather from "./Weather.js";
+import Todo from "./Todo.js";
 
 export default function Dashboard(props) {
   return (
@@ -10,7 +11,9 @@ export default function Dashboard(props) {
         </div>
       </article>
       <article>
-        <div className="dashboard-todo-list"></div>
+        <div className="dashboard-todo-list">
+          <Todo/>
+        </div>
       </article>
     </div>
   );
