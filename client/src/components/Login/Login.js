@@ -26,6 +26,8 @@ export default function Login(props) {
         if (obj.status === 200) {
           props.setLoggedIn(true);
           navigate("/dashboard");
+        } else {
+          alert(obj.body.message);
         }
       });
   };
