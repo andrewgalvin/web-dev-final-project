@@ -1,9 +1,17 @@
 import "../../app.css";
 import "./Register.css";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Register(props) {
   const navigate = useNavigate();
+
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
 
   const handleRegisterClick = (e) => {
     e.preventDefault();
@@ -13,31 +21,45 @@ export default function Register(props) {
     let PASSWORD = data.get("password");
     let CONFIRMPASSWORD = data.get("confirm-password");
 
-    if (PASSWORD !== CONFIRMPASSWORD) {
-      alert("Passwords do not match!");
+    // Validate user email using REGEX
+    // regex taken from http://jsfiddle.net/ghvj4gy9/
+    if (!validateEmail(EMAIL)) {
+      document.getElementById("email").style.border = "1px solid red";
+      return;
     } else {
-      fetch("/api/user/register", {
-        method: "POST", // or 'PUT'
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: EMAIL,
-          password: PASSWORD,
-        }),
-      })
-        .then((r) =>
-          r.json().then((data) => ({ status: r.status, body: data }))
-        )
-        .then(function (obj) {
-          if (obj.status === 200) {
-            alert("Account created!");
-            navigate("/login");
-          } else if (obj.status === 401) {
-            alert("Email taken.");
-          }
-        });
+      document.getElementById("email").style.border = "none";
     }
+
+    // Validate passwords are the same
+    if (PASSWORD !== CONFIRMPASSWORD) {
+      document.getElementById("password").style.border = "1px solid red";
+      document.getElementById("confirm-password").style.border =
+        "1px solid red";
+      return;
+    } else {
+      document.getElementById("password").style.border = "none";
+      document.getElementById("confirm-password").style.border = "none";
+    }
+
+    fetch("/api/user/register", {
+      method: "POST", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: EMAIL,
+        password: PASSWORD,
+      }),
+    })
+      .then((r) => r.json().then((data) => ({ status: r.status, body: data })))
+      .then(function (obj) {
+        if (obj.status === 200) {
+          alert("Account created!");
+          navigate("/login");
+        } else if (obj.status === 401) {
+          alert("Email taken.");
+        }
+      });
   };
   return (
     <div className="register">
