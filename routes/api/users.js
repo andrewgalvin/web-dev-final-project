@@ -59,14 +59,15 @@ router.post("/login", (request, response) => {
 // @desc Register user
 router.post("/register", async (request, response) => {
   // Find requested user in DB
-  User.findOne({ email: request.body.email }, function (err, doc) {
+  User.findOne({ email: request.body.email }, function (err, user) {
     // If user DOES NOT exist
-    if (doc === null) {
+    if (user === null) {
       bcrypt.hash(request.body.password, 10).then((hash) => {
         // Make new user object
         const user = new User({
           email: request.body.email,
           password: hash,
+          todos: [],
         });
 
         // Save user to DB
@@ -85,14 +86,14 @@ router.post("/register", async (request, response) => {
 });
 
 // @route POST api/user/session
-// @desc Check user session 
+// @desc Check user session
 router.post("/session", async (request, response) => {
   if (request.session.user) {
     User.findOne({ email: request.session.user.email })
       .then(async (user) => {
         request.session.user = user;
         response.status(200).json({
-          success: true
+          success: true,
         });
       })
       .catch((err) => {
@@ -105,7 +106,7 @@ router.post("/session", async (request, response) => {
       .status(201)
       .json({ success: false, err: "Invalid login session." });
   }
-})
+});
 
 // @route POST api/user/session/remove
 // @desc Remove user session
@@ -126,6 +127,112 @@ router.post("/session/remove", async (request, response) => {
     response
       .status(401)
       .json({ success: false, err: "No valid login session." });
+  }
+});
+
+// @route GET api/user/todos
+// @desc Retrieve user todos
+router.get("/todos", async (request, response) => {
+  if (request.session.user) {
+    User.findOne({
+      email: request.session.user.email,
+    })
+      .then((user) => {
+        getUser = user;
+
+        // No user found
+        if (!user) {
+          return response.status(400).json({
+            message: "User does not exist.",
+          });
+        }
+
+        return response.status(200).json({ success: true, todos: user.todos });
+      })
+      .catch((err) => {
+        return response.status(401).json({
+          message: "Error retrieving user todos.",
+          err: err,
+        });
+      });
+  } else {
+    response
+      .status(401)
+      .json({ success: false, err: "No valid login session" });
+  }
+});
+
+// @route POST api/user/new/todo
+// @desc Add a new todo
+router.post("/new/todo", async (request, response) => {
+  if (request.session.user) {
+    User.findOne(
+      { email: request.session.user.email },
+      function (err, doc) {
+        // Doc is the user docuement in mongodb
+        if (!err && doc !== null) {
+          // Add the new todo
+          doc.todos = [...doc.todos, {todo: request.body.todo}];
+          doc.save();
+          request.session.user.todos = doc.todos;
+          response.status(200).json({
+            success: true,
+            todos: doc.todos
+          });
+        } else {
+          response.status(401).json({
+            success: false,
+            error: err,
+          })
+        }
+      }
+    )
+      .catch((err) =>
+        response.status(401).json({
+          success: false,
+          error: err,
+        })
+      );
+  } else {
+    response.status(202).json({
+      success: false,
+      err: "Invalid login session.",
+    });
+  }
+});
+
+// @route POST api/user/remove/todo
+// @desc Remove a todo
+router.post("/remove/todo", async (request, response) => {
+  if (request.session.user) {
+    User.findOne(
+      { email: request.session.user.email },
+      function (error, doc) {
+        if (error) {
+          response.status(500).json({
+            success: false,
+            err: error,
+          });
+        } else if (doc) {
+            // get index of item
+          doc.todos.pull({ _id: request.body.id });
+          // save the doc
+          doc.save(function (error) {
+            if (error) {
+              console.log(error);
+              response.status(500).json({
+                success: false,
+                err: error,
+              });
+            } else {
+              response.status(200).json({
+                success: true,
+                todos: doc.todos
+              });            }
+          });
+        }
+      }
+    );
   }
 })
 

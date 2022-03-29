@@ -14,6 +14,8 @@ export default function Weather(props) {
       setLong(position.coords.longitude);
     });
 
+    // Disable this during testing so we do not get rate limited
+    // We are limited to 1k requests / day
     fetch(
       `https://api.openweathermap.org/data/2.5/weather/?lat=${lat}&lon=${long}&units=metric&APPID=ed987e2716aae4a47523c9fb7aeb9abb`
     )

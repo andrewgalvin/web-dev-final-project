@@ -23,7 +23,7 @@
 
 .dashboard-todo-list {
     width: 70vw;
-    height: 40vw;
+    height: 100%;
     border-radius: 5px;
     margin: 40px auto;
     box-shadow: -1em 1em 1em rgb(0, 0, 0, 0.4);

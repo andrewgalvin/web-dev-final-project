@@ -1,6 +1,15 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const todoListSchema = new Schema(
+  {
+    todo: {
+      type: String,
+      required: true
+    }
+  }
+)
+
 const userSchema = new Schema(
   {
     email: {
@@ -11,7 +20,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    // lists: [incomeSchema],
+    todos: [todoListSchema],
   },
   {
     timestamps: true,

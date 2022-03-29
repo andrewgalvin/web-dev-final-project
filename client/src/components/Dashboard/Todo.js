@@ -1,6 +1,76 @@
+import { useEffect, useState } from "react";
 import "./Todo.css";
 
 export default function Todo(props) {
+  const [todos, setTodos] = useState([]);
+  const [selected, setSelected] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/user/todos", {
+      method: "GET", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((r) => r.json().then((data) => ({ status: r.status, body: data })))
+      .then(function (obj) {
+        if (obj.status === 200) {
+          setTodos(obj.body.todos);
+        } else {
+          alert(obj.body.message);
+        }
+      });
+  }, []);
+
+  const handleAddTodoClick = (e) => {
+    // Prevent refresh
+    e.preventDefault();
+    var newTodo = document.getElementById("new-todo").value;
+    if (newTodo !== "") {
+      fetch("/api/user/new/todo", {
+        method: "POST", // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ todo: newTodo }),
+      })
+        .then((r) =>
+          r.json().then((data) => ({ status: r.status, body: data }))
+        )
+        .then(function (obj) {
+          if (obj.status === 200) {
+            setTodos(obj.body.todos);
+          } else {
+            alert(obj.body.message);
+          }
+        });
+    } else {
+      alert("Cannot add blank todo");
+    }
+  };
+
+  const handleRemoveTodoClick = (todo) => {
+    // Prevent refresh
+    fetch("/api/user/remove/todo", {
+      method: "POST", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id:  todo._id}),
+    })
+      .then((r) =>
+        r.json().then((data) => ({ status: r.status, body: data }))
+      )
+      .then(function (obj) {
+        if (obj.status === 200) {
+          setTodos(obj.body.todos);
+        } else {
+          alert(obj.body.message);
+        }
+      });
+
+  };
+
   return (
     <div className="todo">
       <div className="todo-title">
@@ -10,44 +80,39 @@ export default function Todo(props) {
             type="text"
             name="new-todo"
             className="new-todo"
+            id="new-todo"
             placeholder="Enter a new todo"
-          ></input>
-          <button className="new-todo-btn">Add</button>
+          />
+          <button className="new-todo-btn" onClick={handleAddTodoClick}>
+            Add
+          </button>
         </div>
       </div>
       <div className="todo-list">
-        <div className="todo-item">
-          <input type="checkbox" />
-          <p>Item 1</p>
-        </div>
-        <div className="todo-item">
-          <input type="checkbox" />
-          <p>Item 2</p>
-        </div>
-        <div className="todo-item">
-          <input type="checkbox" />
-          <p>Item 3</p>
-        </div>
-        <div className="todo-item">
-          <input type="checkbox" />
-          <p>Item 4</p>
-        </div>
-        <div className="todo-item">
-          <input type="checkbox" />
-          <p>Item 5</p>
-        </div>
-        <div className="todo-item">
-          <input type="checkbox" />
-          <p>Item 6</p>
-        </div>
-        <div className="todo-item">
-          <input type="checkbox" />
-          <p>Item 7</p>
-        </div>
-        <div className="todo-item">
-          <input type="checkbox" />
-          <p>Item 8</p>
-        </div>
+        {todos.length > 0 ? (
+          todos.map((todo) => {
+            return (
+              <div className="todo-item">
+                <p>{todo.todo}</p>
+
+                <button
+                  className="remove-todo-btn"
+                  onClick={(e) => handleRemoveTodoClick(todo)}
+                >
+                  Remove
+                </button>
+              </div>
+            );
+          })
+        ) : (
+          <div style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}>
+            <p style={{fontWeight: "bold", marginTop: "20px", fontSize: "18px"}}>No todos yet... add one to get started!</p>
+          </div>
+        )}
       </div>
     </div>
   );
