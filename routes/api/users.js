@@ -131,9 +131,9 @@ router.post("/session/remove", async (request, response) => {
   }
 });
 
-// @route GET api/user/todos
+// @route POST api/user/todos
 // @desc Retrieve user todos
-router.get("/todos", async (request, response) => {
+router.post("/todos", async (request, response) => {
   if (request.session.user) {
     User.findOne({
       email: request.session.user.email,

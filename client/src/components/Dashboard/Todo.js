@@ -3,11 +3,10 @@ import "./Todo.css";
 
 export default function Todo(props) {
   const [todos, setTodos] = useState([]);
-  const [selected, setSelected] = useState([]);
 
   useEffect(() => {
     fetch("/api/user/todos", {
-      method: "GET", // or 'PUT'
+      method: "POST", // or 'PUT'
       headers: {
         "Content-Type": "application/json",
       },
