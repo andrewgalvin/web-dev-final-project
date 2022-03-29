@@ -4,17 +4,18 @@ const User = require("../../models/userSchema.js");
 const bcrypt = require("bcryptjs");
 const { request } = require("express");
 
+console.log(User);
+
 // @route POST api/user/login
 // @desc Login user and return JWT token
 router.post("/login", (request, response) => {
   let getUser;
   // Find the user in the database
   User.findOne({
-    username: request.body.email,
+    email: request.body.email,
   })
     .then((user) => {
       getUser = user;
-
       // No user found
       if (!user) {
         return response.status(400).json({
@@ -59,7 +60,7 @@ router.post("/login", (request, response) => {
 // @desc Register user
 router.post("/register", async (request, response) => {
   // Find requested user in DB
-  User.findOne({ email: request.body.email }, function (err, user) {
+  User.findOne({ username: request.body.email }, function (err, user) {
     // If user DOES NOT exist
     if (user === null) {
       bcrypt.hash(request.body.password, 10).then((hash) => {

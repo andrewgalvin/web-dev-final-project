@@ -8,7 +8,7 @@ export default function Login(props) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
 
-    let USERNAME = data.get("email");
+    let EMAIL = data.get("email");
     let PASSWORD = data.get("password");
 
     fetch("/api/user/login", {
@@ -17,7 +17,7 @@ export default function Login(props) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: USERNAME,
+        email: EMAIL,
         password: PASSWORD,
       }),
     })
