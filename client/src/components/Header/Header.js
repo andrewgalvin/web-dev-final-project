@@ -23,7 +23,7 @@ export default function Header(props) {
   return (
     <header>
       <div className="header__container">
-        <h1>Web Dev Final Project</h1>
+        <h1>Daily Dashboard</h1>
         <nav className="header__nav">
           <ul>
             <li>
